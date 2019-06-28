@@ -1,0 +1,4 @@
+polestar-config:
+  connect-str: @polestarAddress@
+  team-name: default
+  prolst: common.dubbo

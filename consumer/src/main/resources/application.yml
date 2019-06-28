@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: dubbo-consumer
+  profiles:
+    active: @profileActive@
+server:
+  port: 9878
+dubbo:
+  application:
+    id: dubbo-consumer
+    name: dubbo-consumer
+  monitor:
+    protocol: registry
+  registry:
+    protocol: ${dubbo.protocol}
+    address: zookeeper://127.0.0.1:2181
+  consumer:
+    timeout: ${dubbo.timeout}
+    retries: ${dubbo.retry}
+    check: false
+    version: 1.0.0
+  scan:
+    base-packages: com.ross.dubbo.consumer
+
+# 日志
+logging:
+  config: classpath:config/log4j2.xml

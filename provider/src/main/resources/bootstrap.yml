@@ -1,0 +1,4 @@
+polestar-config:
+  connect-str: @polestarAddress@
+  team-name: default, crm7gateway
+  prolst: common.dubbo, gateway.redis

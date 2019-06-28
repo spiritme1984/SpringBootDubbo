@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: dubbo-provider
+  profiles:
+    active: @profileActive@
+server:
+  port: 9877
+dubbo:
+  application:
+    id: dubbo-provider
+    name: dubbo-provider
+  monitor:
+    protocol: registry
+  registry:
+    protocol: ${dubbo.protocol}
+    address: zookeeper://127.0.0.1:2181
+    check: false
+  protocol:
+    name: dubbo
+    port: ${dubbo.port}
+    threads: ${dubbo.threads}
+    dispatcher: ${dubbo.dispatcher}
+  provider:
+    timeout: ${dubbo.timeout}
+    retries: ${dubbo.retry}
+    accesslog: ${dubbo.accesslog}
+    version: 1.0.0
+  scan:
+    base-packages: com.ross.dubbo
+
+# 日志
+logging:
+  config: classpath:config/log4j2.xml

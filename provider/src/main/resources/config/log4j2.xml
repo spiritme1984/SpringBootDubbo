@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="INFO" monitorInterval="60">
+    <!-- 全局参数 -->
+    <Properties>
+        <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L -%m%n</Property>
+        <Property name="displayName">provider</Property>
+        <!--<Property name="log.dir">/opt/logs/provider</Property>  &lt;!&ndash; Unix &ndash;&gt;-->
+        <Property name="log.dir">./provider/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <Filters>
+                <RegexFilter regex=".* ping .*" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <pattern>${pattern}</pattern>
+            </PatternLayout>
+        </Console>
+        <!-- debug级别日志 -->
+        <RollingFile name="FILE_DEBUG" fileName="${log.dir}/debug.log" filePattern="${log.dir}/$${date:yyyyMM}/debug-%d{yyyyMMdd}.log">
+            <!-- 当使用组合过滤器的时候，onMatch/onMismatch=NEUTRAL的时候 日志消息会继续往后面流转-->
+            <Filters>
+                <RegexFilter regex=".* ping .*" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <Pattern>${pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <!-- info级别日志 -->
+        <RollingFile name="FILE_INFO" fileName="${log.dir}/info.log" filePattern="${log.dir}/$${date:yyyyMM}/info-%d{yyyyMMdd}.log">
+            <!-- 当使用组合过滤器的时候，onMatch/onMismatch=NEUTRAL的时候 日志消息会继续往后面流转-->
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <Pattern>${pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <!-- error级别日志 -->
+        <RollingFile name="FILE_ERROR" fileName="${log.dir}/error.log" filePattern="${log.dir}/$${date:yyyyMM}/error-%d{yyyyMMdd}.log">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <Pattern>${pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <loggers>
+        <root level="all">
+            <appender-ref ref="Console"/>
+            <!--<appender-ref ref="FILE_DEBUG"/>-->
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </root>
+    </loggers>
+</configuration>
